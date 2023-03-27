@@ -1,10 +1,11 @@
 import { component$,  } from '@builder.io/qwik';
+import {container} from './header.css';
 
-export default component$(() => {
+export const Header = component$(() => {
   // useStylesScoped$(styles);
 
   return (
-    <header class="flex flex-row justify-between items-center bg-red-700">
+    <header class={container}>
       <div class="grow-[2]">
         <a href="https://qwik.builder.io/" target="_blank" title="qwik" rel="noopener">
           Go
