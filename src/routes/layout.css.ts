@@ -13,42 +13,42 @@ export const mainContent=style({
     overflowY: 'auto',
     overflowX: 'hidden',
     scrollBehavior: 'smooth',
+    scrollbarWidth: 'none',
+    '::-webkit-scrollbar': {
+        display: 'none'
+    },
 
     // '::-webkit-scrollbar': {
-    //     display: 'none'
+    //     width: 16,
+    //     height: 12,
+    //     borderRadius: '100vw',
     // },
 
-    '::-webkit-scrollbar': {
-        width: 16,
-        height: 12,
-        borderRadius: '100vw',
-    },
+    // '::-webkit-scrollbar-track': {
+    //     background: 'transparent',
+    //     marginBlock: '0.3em'
+    // },
 
-    '::-webkit-scrollbar-track': {
-        background: 'transparent',
-        marginBlock: '0.3em'
-    },
-
-    '::-webkit-scrollbar-thumb': {
-        background: 'rgba(0, 0, 0, 0.3)',
-        border: '4px solid transparent',
-        backgroundClip: 'padding-box',
-        borderRadius: '100vw'
-    },
+    // '::-webkit-scrollbar-thumb': {
+    //     background: 'rgba(0, 0, 0, 0.3)',
+    //     border: '4px solid transparent',
+    //     backgroundClip: 'padding-box',
+    //     borderRadius: '100vw'
+    // },
 
 
 
-    selectors: {
-        '&::-webkit-scrollbar-thumb:hover': {
-            background: 'rgba(0,255,0, 0.8)',
-            backgroundClip: 'padding-box',
-            border: '1px solid transparent'
-        },
+    // selectors: {
+    //     '&::-webkit-scrollbar-thumb:hover': {
+    //         background: 'rgba(0,255,0, 0.8)',
+    //         backgroundClip: 'padding-box',
+    //         border: '1px solid transparent'
+    //     },
 
-        '&::-webkit-scrollbar-thumb:active': {
-            background: 'rgba(0, 0, 0, 0.6)',
-            backgroundClip: 'padding-box',
-            border: '1px solid transparent'
-        },
-    }
+    //     '&::-webkit-scrollbar-thumb:active': {
+    //         background: 'rgba(0, 0, 0, 0.6)',
+    //         backgroundClip: 'padding-box',
+    //         border: '1px solid transparent'
+    //     },
+    // }
 });
