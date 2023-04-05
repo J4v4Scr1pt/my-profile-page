@@ -11,7 +11,7 @@ interface QuoteData {
 	quote: string;
 }
 interface QuoteNorrisData {
-	quote: string;
+	value: string;
 }
 
 export default component$(() => {
@@ -24,7 +24,7 @@ export default component$(() => {
 	});
 	const onGetNorrisQuote = $(async () => {
 		const nQuote = await getNorrisQuote();
-		norrisQuote.value = nQuote.quote;
+		norrisQuote.value = nQuote.value;
 	});
 	return (
 		<div class={container}>
@@ -62,7 +62,7 @@ async function getNorrisQuote(): Promise<QuoteNorrisData> {
 	} catch (error) {
 		console.log('🚀 ~ file: index.tsx:63 ~ getNorrisQuote ~ error:', error);
 		return {
-			quote: 'error',
+			value: 'error',
 		} as QuoteNorrisData;
 	}
 }
