@@ -1,25 +1,30 @@
-import { component$, useResource$, Resource } from '@builder.io/qwik';
+import {
+	component$,
+	useResource$,
+	Resource,
+	$,
+	useSignal,
+} from '@builder.io/qwik';
 import { container } from './about-me.css';
 
-interface ProductData {
-	skuId: string;
-	price: number;
-	description: string;
+interface QuoteData {
+	quote: string;
+}
+interface QuoteNorrisData {
+	quote: string;
 }
 
 export default component$(() => {
-	const resourceToRender = useResource$<ProductData>(({ cleanup }) => {
-		// We need a way to re-run fetching data whenever the `github.org` changes.
-		// Use `track` to trigger re-running of the this data fetching function.
-
-		// A good practice is to use `AbortController` to abort the fetching of data if
-		// new request comes in. We create a new `AbortController` and register a `cleanup`
-		// function which is called when this function re-runs.
+	const norrisQuote = useSignal('No norrisQuote');
+	const resourceToRender = useResource$<QuoteData>(async ({ cleanup }) => {
 		const controller = new AbortController();
 		cleanup(() => controller.abort());
 
-		// Fetch the data and return the promises.
-		return getRepositories(controller);
+		return await getQuote(controller);
+	});
+	const onGetNorrisQuote = $(async () => {
+		const nQuote = await getNorrisQuote();
+		norrisQuote.value = nQuote.quote;
 	});
 	return (
 		<div class={container}>
@@ -27,21 +32,37 @@ export default component$(() => {
 			<Resource
 				value={resourceToRender}
 				onPending={() => <div>Loading...</div>}
-				onRejected={(reason) => <div>Error: {reason}</div>}
-				onResolved={(data) => <div>{data.description}</div>}
+				onRejected={(reason) => <div>Error: {reason.toString()}</div>}
+				onResolved={(data) => <div>{data.quote}</div>}
 			/>
+
+			<button onClick$={() => onGetNorrisQuote()}>
+				Click me for Norris quotes
+			</button>
+			<span>{norrisQuote}</span>
 		</div>
 	);
 });
 
-async function getRepositories(
-	// skuId: string,
-	controller?: AbortController
-): Promise<ProductData> {
-	const resp = await fetch(`https://thisisme.vercel.app/names`, {
+async function getQuote(controller?: AbortController): Promise<QuoteData> {
+	const resp = await fetch(`https://api.kanye.rest`, {
 		signal: controller?.signal,
 	});
-	console.log('FETCH resolved');
 	const json = await resp.json();
 	return json;
+}
+
+async function getNorrisQuote(): Promise<QuoteNorrisData> {
+	try {
+		const resp = await fetch(`https://thisisme.vercel.app/api/quote`);
+		console.log('🚀 ~ file: index.tsx:58 ~ getNorrisQuote ~ resp:', resp);
+		const json = await resp.json();
+		console.log('🚀 ~ file: index.tsx:59 ~ getNorrisQuote ~ json:', json);
+		return json;
+	} catch (error) {
+		console.log('🚀 ~ file: index.tsx:63 ~ getNorrisQuote ~ error:', error);
+		return {
+			quote: 'error',
+		} as QuoteNorrisData;
+	}
 }
