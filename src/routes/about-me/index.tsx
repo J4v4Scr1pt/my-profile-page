@@ -6,12 +6,17 @@ import {
 	useSignal,
 } from '@builder.io/qwik';
 import { container } from './about-me.css';
+import axios from 'axios';
 
 interface QuoteData {
 	quote: string;
 }
 interface QuoteNorrisData {
-	value: string;
+	quote: string;
+}
+
+interface Error {
+	error: unknown;
 }
 
 export default component$(() => {
@@ -24,7 +29,8 @@ export default component$(() => {
 	});
 	const onGetNorrisQuote = $(async () => {
 		const nQuote = await getNorrisQuote();
-		norrisQuote.value = nQuote.value;
+		// @ts-ignore
+		norrisQuote.value = nQuote.quote;
 	});
 	return (
 		<div class={container}>
@@ -52,17 +58,16 @@ async function getQuote(controller?: AbortController): Promise<QuoteData> {
 	return json;
 }
 
-async function getNorrisQuote(): Promise<QuoteNorrisData> {
+async function getNorrisQuote(): Promise<QuoteNorrisData | Error> {
 	try {
-		const resp = await fetch(`https://thisisme.vercel.app/api/quote`);
-		console.log('🚀 ~ file: index.tsx:58 ~ getNorrisQuote ~ resp:', resp);
-		const json = await resp.json();
-		console.log('🚀 ~ file: index.tsx:59 ~ getNorrisQuote ~ json:', json);
-		return json;
-	} catch (error) {
-		console.log('🚀 ~ file: index.tsx:63 ~ getNorrisQuote ~ error:', error);
+		const url = import.meta.env.DEV
+			? 'http://192.168.1.58:5173/api/quote'
+			: 'https://thisisme.vercel.app/api/quote';
+		const response = await axios.get(url);
+		return response.data;
+	} catch (error: unknown) {
 		return {
-			value: 'error',
-		} as QuoteNorrisData;
+			error: error,
+		};
 	}
 }
